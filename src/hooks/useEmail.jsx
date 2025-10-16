@@ -16,11 +16,11 @@ export const useEmail = () => {
       const PUBLIC_KEY = import.meta.env.VITE_PUBLIC_KEY_EMAIL;
 
       const templateParams = {
-        from_name: formData.nama,
+        name: formData.nama,
+        title: formData.judul,
         message: formData.pesan,
-        reply_to: formData.email,
-        from_email: formData.email,
       };
+
 
       await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
 

@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack';
 export default function Kontak() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { sendEmail, loading, status } = useEmail();
-  const [form, setForm] = useState({ nama: '', email: '', pesan: '' });
+  const [form, setForm] = useState({ nama: '', judul: '', pesan: '' });
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -68,7 +68,7 @@ export default function Kontak() {
         </div>
       ),
     });
-    setForm({ nama: '', email: '', pesan: '' });
+    setForm({ nama: '', judul: '', pesan: '' });
   };
 
   return (
@@ -139,15 +139,15 @@ export default function Kontak() {
 
             <div>
               <label className="label">
-                <span className="label-text font-medium">Email</span>
+                <span className="label-text font-medium">Judul</span>
               </label>
               <input
-                type="email"
-                name="email"
-                value={form.email}
+                type="judul"
+                name="judul"
+                value={form.judul}
                 onChange={handleChange}
                 required
-                placeholder="nama@email.com"
+                placeholder="Masukkan Judul.."
                 className="input input-bordered w-full"
               />
             </div>
