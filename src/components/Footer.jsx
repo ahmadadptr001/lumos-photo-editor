@@ -11,7 +11,7 @@ export default function Footer() {
             to="/"
             className="text-2xl font-extrabold tracking-tight text-primary hover:text-secondary transition-colors"
           >
-            Pixeon
+            Lumos 
           </Link>
           <p className="mt-3 text-sm opacity-80 leading-relaxed">
             Editor foto berbasis web buatan <br />
@@ -105,7 +105,7 @@ export default function Footer() {
       <div className="border-t border-base-300 py-4 mt-4">
         <p className="text-center text-sm opacity-70">
           © {new Date().getFullYear()}{" "}
-          <span className="font-semibold text-primary">Pixeon</span> — Semua hak cipta dilindungi.
+          <span className="font-semibold text-primary">Lumos</span> — Semua hak cipta dilindungi.
         </p>
       </div>
     </footer>
