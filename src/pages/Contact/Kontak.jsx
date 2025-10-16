@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useEmail } from '../../hooks/useEmail';
+import { CheckCircle, XCircle } from 'lucide-react';
+import { useSnackbar } from 'notistack';
 
 export default function Kontak() {
-  const [form, setForm] = useState({
-    nama: '',
-    email: '',
-    pesan: '',
-  });
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { sendEmail, loading, status } = useEmail();
+  const [form, setForm] = useState({ nama: '', email: '', pesan: '' });
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -14,8 +15,59 @@ export default function Kontak() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Untuk versi awal, cukup alert
-    alert('Terima kasih telah menghubungi kami! Pesan Anda telah terkirim.');
+
+    // pengiriman data
+    sendEmail(form);
+    if (status.type == 'error') {
+      console.log('error')
+      enqueueSnackbar(status.message, {
+        variant: 'error',
+        autoHideDuration: 4000,
+        anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
+        action: (key) => (
+          <button
+            onClick={() => closeSnackbar(key)}
+            className="btn btn-xs btn-ghost ml-3 text-xs"
+          >
+            Tutup
+          </button>
+        ),
+        content: (key, message) => (
+          <div
+            key={key}
+            className="bg-error text-error-content shadow-lg rounded-xl px-4 py-3 flex items-center gap-3 border border-error/40"
+          >
+            <XCircle size={20} />
+            <span className="text-sm font-medium">{message}</span>
+          </div>
+        ),
+      });
+      return;
+    }
+
+    // notifikasi setelah pengiriman data
+    enqueueSnackbar('Pesan Anda telah terkirim! 🎉', {
+      variant: 'success',
+      autoHideDuration: 4000,
+      anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
+      action: (key) => (
+        <button
+          onClick={() => closeSnackbar(key)}
+          className="btn btn-xs btn-ghost ml-3 text-xs"
+        >
+          Tutup
+        </button>
+      ),
+      content: (key, message) => (
+        <div
+          key={key}
+          className="bg-success text-success-content shadow-lg rounded-xl px-4 py-3 flex items-center gap-3 border border-success/40"
+        >
+          <CheckCircle size={20} />
+          <span className="text-sm font-medium">{message}</span>
+        </div>
+      ),
+    });
     setForm({ nama: '', email: '', pesan: '' });
   };
 
@@ -52,9 +104,8 @@ export default function Kontak() {
         </div>
       </section>
 
-      {/* Contact Form */}
+      {/* Form Section */}
       <section className="max-w-5xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-10 items-start">
-        {/* Left Side */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -115,13 +166,17 @@ export default function Kontak() {
               ></textarea>
             </div>
 
-            <button type="submit" className="btn btn-primary w-full">
-              Kirim Pesan
+            <button
+              type="submit"
+              className="btn btn-primary w-full"
+              disabled={loading}
+            >
+              {loading ? 'Mengirim..' : 'Kirim Pesan'}
             </button>
           </form>
         </motion.div>
 
-        {/* Right Side */}
+        {/* Right Side Info */}
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -161,26 +216,6 @@ export default function Kontak() {
             alt="Contact Illustration"
             className="rounded-2xl shadow-lg mt-10"
           />
-        </motion.div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="text-center pb-20">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-        >
-          <h3 className="text-2xl font-semibold mb-4">
-            Butuh bantuan lebih cepat?
-          </h3>
-          <a
-            href="mailto:ahmadadptr@gmail.com"
-            className="btn btn-outline btn-primary"
-          >
-            Kirim Email Langsung
-          </a>
         </motion.div>
       </section>
     </div>
