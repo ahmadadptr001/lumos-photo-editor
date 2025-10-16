@@ -7,11 +7,7 @@ export default function Header() {
   const [theme, setTheme] = useState('light');
 
   const toggleMenu = () => setIsOpen(!isOpen);
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    document.querySelector('html').setAttribute('data-theme', newTheme);
-  };
+ 
 
   const navItems = [
     { name: 'Beranda', to: '/' },
