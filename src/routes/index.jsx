@@ -6,6 +6,7 @@ import Panduan from '../pages/Help/Panduan';
 import Tentang from '../pages/About/Tentang';
 import Kontak from '../pages/Contact/Kontak';
 import NotFound from '../pages/Error/NotFound';
+import Editor from '../pages/Editor/Editor';
 
 export default function AppRoutes() {
   return (
@@ -16,6 +17,7 @@ export default function AppRoutes() {
         <Route path="/panduan" element={<Panduan />} />
         <Route path="/tentang" element={<Tentang />} />
         <Route path="/kontak" element={<Kontak />} />
+        <Route path="/editor" element={<Editor />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
