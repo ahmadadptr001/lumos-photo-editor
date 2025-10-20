@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Image,
   Crop,
@@ -12,15 +14,15 @@ import {
   Wand2,
   Settings,
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
 import { dropZoneService } from '../../services/dropZonePhotoService';
+import CropTool from '../../components/CropTool';
 
 export default function PhotoEditor() {
   const { filePhoto, setFilePhoto, getRootProps, getInputProps, isDragActive } =
     dropZoneService();
 
   const [showExtraMenu, setShowExtraMenu] = useState(false);
+  const [showCrop, setShowCrop] = useState(false);
 
   const handleDeletePhoto = () => {
     if (confirm('Apakah Anda yakin ingin menghapus gambar ini?')) {
@@ -28,8 +30,24 @@ export default function PhotoEditor() {
     }
   };
 
+  const handleCropDone = (croppedData) => {
+    setFilePhoto(dataURLtoFile(croppedData, 'cropped-image.png'));
+    setShowCrop(false);
+  };
+
+  // Fungsi bantu: ubah base64 jadi File
+  const dataURLtoFile = (dataURL, filename) => {
+    const arr = dataURL.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) u8arr[n] = bstr.charCodeAt(n);
+    return new File([u8arr], filename, { type: mime });
+  };
+
   const tools = [
-    { icon: Crop, tip: 'Crop' },
+    { icon: Crop, tip: 'Crop', onClick: () => setShowCrop(true) },
     { icon: RotateCcw, tip: 'Rotate Left' },
     { icon: RotateCw, tip: 'Rotate Right' },
     { icon: Filter, tip: 'Filters' },
@@ -45,12 +63,11 @@ export default function PhotoEditor() {
 
   return (
     <div className="flex flex-col sm:flex-row min-h-screen bg-base-100">
-      {/* === BAGIAN UTAMA === */}
+      {/* Kontainer utama upload */}
       <div className="flex-1 p-4 sm:p-10 flex flex-col">
         <h1 className="text-3xl font-bold mb-6 text-center sm:text-left">
           Lumos Photo Editor
         </h1>
-
         <div
           {...getRootProps()}
           className={`flex-1 border-2 border-dashed rounded-2xl flex items-center justify-center transition-all duration-300 min-h-[50vh] sm:min-h-[70vh] ${
@@ -74,21 +91,16 @@ export default function PhotoEditor() {
                   isDragActive ? 'animate-bounce text-warning' : ''
                 }`}
               />
-              {isDragActive ? (
-                <p className="text-warning font-medium">
-                  Lepaskan gambar untuk mengunggah
-                </p>
-              ) : (
-                <p className="font-medium">
-                  Klik atau drop gambar untuk mengunggah
-                </p>
-              )}
+              <p className="font-medium">
+                {isDragActive
+                  ? 'Lepaskan gambar untuk mengunggah'
+                  : 'Klik atau drop gambar untuk mengunggah'}
+              </p>
             </div>
           )}
         </div>
       </div>
 
-      {/* === SIDEBAR UNTUK DESKTOP === */}
       <div className="hidden sm:flex w-20 bg-base-200 flex-col items-center py-10 gap-6 border-l border-base-300 relative">
         {tools.map(({ icon: Icon, tip, onClick }, i) => (
           <div key={i} className="tooltip tooltip-left" data-tip={tip}>
@@ -233,6 +245,17 @@ export default function PhotoEditor() {
               </div>
             </motion.div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Komponen Crop muncul sebagai overlay */}
+      <AnimatePresence>
+        {showCrop && filePhoto && (
+          <CropTool
+            src={URL.createObjectURL(filePhoto)}
+            onCancel={() => setShowCrop(false)}
+            onCropDone={handleCropDone}
+          />
         )}
       </AnimatePresence>
     </div>
