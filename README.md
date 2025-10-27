@@ -1,5 +1,5 @@
 <h1 align="center">🌙 LUMOS PHOTO EDITOR</h1>
-
+<img src='https://lumos-photo-editor.vercel.app/preview.png' alt="Neostore" width="100%"/>
 <p align="center">
   <i>"Cahaya dalam setiap sentuhan kreatif — ubah fotomu jadi karya luar biasa."</i>
 </p>
